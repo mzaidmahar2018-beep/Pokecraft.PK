@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokecraft Store | DIY Pokemon Pakistan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --burst-yellow: #FFDE00;
+            --burst-orange: #FF8C00;
+            --deep-red: #CC0000;
+            --white: #ffffff;
+            --whatsapp-green: #25D366;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--burst-yellow), var(--burst-orange));
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        /* Header & Nav */
+        nav {
+            background: #fff;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-family: 'Bangers'; font-size: 2.5rem; color: var(--burst-orange); text-shadow: 2px 2px var(--burst-yellow); cursor: pointer; }
+        
+        .cart-status { background: var(--deep-red); color: white; padding: 10px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; border: 3px solid var(--burst-yellow); }
+
+        /* Pages */
+        .page { display: none; padding: 40px 5%; animation: fadeIn 0.5s; }
+        .active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Hero */
+        .hero-box {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            border: 6px solid var(--burst-orange);
+            margin-bottom: 50px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .hero-box h1 { font-family: 'Bangers'; font-size: 4rem; color: var(--burst-orange); margin: 0; }
+
+        /* Products */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        
+        .product-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            border: 4px solid var(--white);
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .stock-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        .in-stock { background: #28a745; }
+        .out-stock { background: #666; }
+
+        .product-card:hover { transform: translateY(-10px); border-color: var(--burst-orange); }
+        .product-card img { width: 100%; border-radius: 15px; margin-bottom: 20px; }
+        .product-card h3 { font-size: 1.8rem; margin: 10px 0; }
+        .price-tag { font-size: 2rem; color: var(--deep-red); font-weight: 800; margin-bottom: 20px; }
+
+        .btn-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .btn { flex: 1; min-width: 120px; padding: 12px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-cart { background: #eee; color: #333; }
+        .btn-buy { background: var(--burst-orange); color: white; }
+        .btn-review { background: #555; color: white; width: 100%; margin-top: 10px; font-size: 0.8rem; }
+
+        /* Order Form */
+        .order-form {
+            background: white;
+            max-width: 600px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 30px;
+            border: 5px solid var(--burst-orange);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-family: 'Poppins';
+            box-sizing: border-box;
+        }
+
+        .submit-order {
+            background: #28a745;
+            color: white;
+            font-size: 1.3rem;
+            padding: 20px;
+            width: 100%;
+            border: none;
+            border-radius: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background-color: var(--whatsapp-green);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .pika-float { position: fixed; bottom: 20px; left: 20px; width: 100px; z-index: 500; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="showPage('home-page')">POKECRAFT PK</div>
+        <div class="cart-status" onclick="showPage('cart-page')">MY BAG (<span id="count">0</span>)</div>
+    </nav>
+
+    <div id="home-page" class="page active">
+        <div class="hero-box">
+            <h1>BIG POKEMON SALE!</h1>
+            <p>High Quality DIY Cards | Fast Delivery to Your Door</p>
+            <p style="color: var(--deep-red); font-weight: bold;">SPECIAL: BUY 3 ITEMS = FREE DELIVERY!</p>
+        </div>
+
+        <div class="grid">
+            <div class="product-card">
+                <span class="stock-badge in-stock">In Stock</span>
+                <img src="pack.png" alt="Booster">
+                <h3>DIY Booster Pack</h3>
+                <p>9 Shiny DIY Cards</p>
+                <div class="price-tag">Rs. 200</div>
+                <div class="btn-row">
+                    <button class="btn btn-cart" onclick="addToCart('Booster Pack', 200)">+ Cart</button>
+                    <button class="btn btn-buy" onclick="buyNow('Booster Pack', 200)">Buy Now</button>
+                    <button class="btn btn-review" onclick="giveReview('DIY Booster Pack')">Give Review</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="stock-badge in-stock">out of stock</span>
+                <img src="https://via.placeholder.com/300x200?text=Tin+Case" alt="Tin">
+                <h3>Collector's Tin</h3>
+                <p>3 Booster Packs inside</p>
+                <div class="price-tag">Rs. 400</div> <div class="btn-row">
+                    <button class="btn btn-cart" onclick="addToCart('Tin Case', 400)">+ Cart</button>
+                    <button class="btn btn-buy" onclick="buyNow('Tin Case', 400)">Buy Now</button>
+                    <button class="btn btn-review" onclick="giveReview('Collector\'s Tin')">Give Review</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="stock-badge in-stock">out of stock</span>
+                <img src="https://via.placeholder.com/300x200?text=ETB+Box" alt="ETB">
+                <h3>Elite Trainer Box</h3>
+                <p>8 Packs + 1 Gold Card</p>
+                <div class="price-tag">Rs. 1500</div>
+                <div class="btn-row">
+                    <button class="btn btn-cart" onclick="addToCart('ETB Box', 1500)">+ Cart</button>
+                    <button class="btn btn-buy" onclick="buyNow('ETB Box', 1500)">Buy Now</button>
+                    <button class="btn btn-review" onclick="giveReview('Elite Trainer Box')">Give Review</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="stock-badge in-stock">out of stock</span>
+                <img src="https://via.placeholder.com/300x200?text=Mystery+Box" alt="Mystery Box">
+                <h3>Mystery Box</h3>
+                <p>Contains mystery products from our website!</p>
+                <div class="price-tag">Rs. 1000</div>
+                <div class="btn-row">
+                    <button class="btn btn-cart" onclick="addToCart('Mystery Box', 1000)">+ Cart</button>
+                    <button class="btn btn-buy" onclick="buyNow('Mystery Box', 1000)">Buy Now</button>
+                    <button class="btn btn-review" onclick="giveReview('Mystery Box')">Give Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="whatsapp-float" onclick="contactWhatsApp()" title="Contact on WhatsApp">
+        <svg viewBox="0 0 32 32" style="width: 40px; fill: white;"><path d="M16 0C7.163 0 0 7.163 0 16c0 2.825.741 5.476 2.033 7.787L0 32l8.441-2.213C10.706 31.206 13.262 32 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm9.462 22.512c-.394 1.109-1.928 2.03-2.659 2.153-.731.123-1.637.215-2.615-.123-3.923-1.354-6.492-5.323-6.677-5.569-.185-.246-1.508-2.004-1.508-3.815 0-1.815.954-2.708 1.292-3.077.338-.369.738-.462.985-.462.246 0 .492.015.708.015.231 0 .538-.092.846.646.308.738 1.046 2.554 1.138 2.738.092.185.154.4.031.646-.123.246-.185.4-.369.615-.185.215-.4.492-.569.646-.185.185-.385.385-.169.769.215.385.954 1.569 2.046 2.538 1.4 1.246 2.585 1.631 2.954 1.815.369.185.585.154.8-.108.215-.262.923-1.077 1.169-1.446.246-.369.492-.308.831-.185.338.123 2.154 1.015 2.523 1.2.369.185.615.277.708.431.092.154.092.892-.308 2.015z"/></svg>
+    </button>
+
+    <div id="cart-page" class="page">
+        <div class="order-form">
+            <h2 style="font-family: 'Bangers'; text-align: center; color: var(--burst-orange);">Complete Your Order</h2>
+            
+            <div id="cart-summary" style="background: #fff9e6; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                </div>
+
+            <form action="https://formspree.io/f/mwvnorzr " method="POST">
+                <input type="hidden" name="_subject" value="New Pokecraft Order!">
+                <input type="hidden" id="orderItems" name="OrderItems">
+                <input type="hidden" id="finalTotal" name="TotalAmount">
+
+                <label>Contact Info</label>
+                <input type="text" name="FullName" placeholder="Full Name" required>
+                <input type="tel" name="Phone" placeholder="Phone Number (e.g. 0331...)" required>
+
+                <label>Address Details</label>
+                <select name="Province" required>
+                    <option value="">Select Province</option>
+                    <option value="Sindh">Sindh</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="KPK">KPK</option>
+                    <option value="Balochistan">Balochistan</option>
+                    <option value="Gilgit">Gilgit Baltistan</option>
+                </select>
+
+                <input type="text" name="City" placeholder="City" required>
+                <input type="text" name="Area" placeholder="Area / Sector / Colony" required>
+                <textarea name="FullAddress" rows="3" placeholder="Full Street Address / House Number" required></textarea>
+
+                <p style="font-size: 0.8rem; color: #666;">* Payment Method: Cash on Delivery</p>
+                
+                <button type="submit" class="submit-order">PLACE ORDER NOW</button>
+            </form>
+            <button onclick="showPage('home-page')" style="background: none; border: none; color: blue; cursor: pointer; display: block; width: 100%; margin-top: 10px;">Return to Shop</button>
+        </div>
+    </div>
+
+    <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png" class="pika-float" alt="Decoration">
+
+    <script>
+        let cart = [];
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCart();
+            alert(name + " added to your bag!");
+        }
+
+        function buyNow(name, price) {
+            cart = [{name, price}];
+            updateCart();
+            showPage('cart-page');
+        }
+
+        function updateCart() {
+            document.getElementById('count').innerText = cart.length;
+            let summary = document.getElementById('cart-summary');
+            let itemsInput = document.getElementById('orderItems');
+            let totalInput = document.getElementById('finalTotal');
+            
+            let total = 0;
+            let names = [];
+            let html = "<b>Items:</b><br>";
+            
+            cart.forEach(item => {
+                total += item.price;
+                names.push(item.name);
+                html += `- ${item.name} (Rs. ${item.price})<br>`;
+            });
+
+            // Delivery Logic: Changed 200 to 100
+            let freeDeliveryCount = cart.filter(i => i.name === 'Booster Pack' || i.name === 'Mystery Box' || i.name === 'Tin Case' || i.name === 'ETB Box').length;
+            let shipping = (freeDeliveryCount >= 3) ? 0 : 100; 
+            total += shipping;
+
+            html += `<br><b>Delivery Fee:</b> Rs. ${shipping}`;
+            html += `<br><b style="font-size: 1.2rem; color: #CC0000;">Total: Rs. ${total}</b>`;
+            
+            summary.innerHTML = html;
+            itemsInput.value = names.join(", ");
+            totalInput.value = "Rs. " + total;
+        }
+
+        // WhatsApp Copy and Redirect
+        function contactWhatsApp() {
+            const number = "03313484401";
+            navigator.clipboard.writeText(number).then(() => {
+                alert("Number copied: " + number + ". Redirecting to WhatsApp...");
+                window.open("https://wa.me/923313484401", "_blank");
+            });
+        }
+
+        // Simple Review Pop-up
+        function giveReview(productName) {
+            let review = prompt("Write your review for " + productName + ":");
+            if (review) {
+                alert("Thank you for your review! It has been submitted.");
+            }
+        }
+    </script>
+</body>
+</html>
